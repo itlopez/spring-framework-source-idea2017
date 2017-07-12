@@ -153,6 +153,13 @@ import org.springframework.web.util.WebUtils;
  * @see org.springframework.web.HttpRequestHandler
  * @see org.springframework.web.servlet.mvc.Controller
  * @see org.springframework.web.context.ContextLoaderListener
+ *
+ *
+ * DispatcherServlet就是整个Spring MVC框架的切入点。
+ * 与添加Struts类似。Struts是通过Filter作为切入点，而Spring MVC使用的是Servlet。
+ * 原理其实是一样的，都起到拦截用户请求的作用。Filter是在服务器启动时，即生成一个实例。
+ * 而Servlet若不设置load-on-startup，则为第一次访问时生成实例。
+ * DispatcherServlet需要在服务器启动时生成实例。下面我们通过源码的来解析Spring MVC的大体流程:
  */
 @SuppressWarnings("serial")
 public class DispatcherServlet extends FrameworkServlet {
@@ -865,6 +872,7 @@ public class DispatcherServlet extends FrameworkServlet {
 	 * Exposes the DispatcherServlet-specific request attributes and delegates to {@link #doDispatch}
 	 * for the actual dispatching.
 	 */
+	//而doService中又调用了doDispatcher方法。那么可以看出,doDispatcher就是DispatcherServlet处理核心方法。
 	@Override
 	protected void doService(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		if (logger.isDebugEnabled()) {
@@ -924,6 +932,9 @@ public class DispatcherServlet extends FrameworkServlet {
 	 * @param response current HTTP response
 	 * @throws Exception in case of any kind of processing failure
 	 */
+
+
+	//那么可以看出,doDispatcher就是DispatcherServlet处理核心方法。
 	protected void doDispatch(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		HttpServletRequest processedRequest = request;
 		HandlerExecutionChain mappedHandler = null;
@@ -940,6 +951,8 @@ public class DispatcherServlet extends FrameworkServlet {
 				multipartRequestParsed = (processedRequest != request);
 
 				// Determine handler for the current request.
+
+				//doDispatcher方法中,首先通过getHandler方法获得handler,如下:
 				mappedHandler = getHandler(processedRequest);
 				if (mappedHandler == null || mappedHandler.getHandler() == null) {
 					noHandlerFound(processedRequest, response);
@@ -947,6 +960,7 @@ public class DispatcherServlet extends FrameworkServlet {
 				}
 
 				// Determine handler adapter for the current request.
+				//而HandlerAdapter接口的具体实现类的对象为真正调用方法,即通过反射调用HandlerMethod对象中封装的某个类的实例所对应的某个方法。
 				HandlerAdapter ha = getHandlerAdapter(mappedHandler.getHandler());
 
 				// Process last-modified header, if supported by the handler.
@@ -962,11 +976,14 @@ public class DispatcherServlet extends FrameworkServlet {
 					}
 				}
 
+				//之前
 				if (!mappedHandler.applyPreHandle(processedRequest, response)) {
 					return;
 				}
 
 				// Actually invoke the handler.
+
+				//返回值为ModelAndView类型的对象,作用就不必多说.而在hanle方法之前和之后有这么两个方法调用:
 				mv = ha.handle(processedRequest, response, mappedHandler.getHandler());
 
 				if (asyncManager.isConcurrentHandlingStarted()) {
@@ -974,6 +991,8 @@ public class DispatcherServlet extends FrameworkServlet {
 				}
 
 				applyDefaultViewName(processedRequest, mv);
+
+				//之后   作用就是通过执行链中的Interceptor拦截器做拦截处理。功能与Filter相似
 				mappedHandler.applyPostHandle(processedRequest, response, mv);
 			}
 			catch (Exception ex) {
@@ -1153,8 +1172,12 @@ public class DispatcherServlet extends FrameworkServlet {
 	 * @param request current HTTP request
 	 * @return the HandlerExecutionChain, or {@code null} if no handler could be found
 	 */
+	//遍历所有HandlerMapping并调用每个HandlerMapping对象的getHandler方法,而HandlerMapping为接口,
+	// 其中AbstractHandlerMapping这个抽象类中实现了HandlerMapping接口,并实现了getHandler方法,如下:
+
 	@Nullable
 	protected HandlerExecutionChain getHandler(HttpServletRequest request) throws Exception {
+
 		for (HandlerMapping hm : this.handlerMappings) {
 			if (logger.isTraceEnabled()) {
 				logger.trace(

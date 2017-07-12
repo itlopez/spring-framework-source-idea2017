@@ -47,6 +47,8 @@ import org.springframework.lang.Nullable;
  * @see org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter
  * @see org.springframework.web.servlet.handler.SimpleServletHandlerAdapter
  */
+
+//HandlerAdapter:作用为具体处理HandlerMethod,即通过它调用某个方法
 public interface HandlerAdapter {
 
 	/**

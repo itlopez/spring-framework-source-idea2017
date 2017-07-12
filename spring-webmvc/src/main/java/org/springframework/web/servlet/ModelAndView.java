@@ -44,6 +44,7 @@ import org.springframework.util.CollectionUtils;
  * @see HandlerAdapter#handle
  * @see org.springframework.web.servlet.mvc.Controller#handleRequest
  */
+//ModelAndView,顾名思义。Model即MVC的M，View即MVC的V。其对象存放的正是数据与视图信息。
 public class ModelAndView {
 
 	/** View instance or view name String */

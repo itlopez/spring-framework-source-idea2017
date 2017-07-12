@@ -213,6 +213,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * Create a new AbstractApplicationContext with no parent.
 	 */
 	public AbstractApplicationContext() {
+
+		//获得一个资源模板解析器
 		this.resourcePatternResolver = getResourcePatternResolver();
 	}
 
@@ -220,6 +222,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * Create a new AbstractApplicationContext with the given parent context.
 	 * @param parent the parent context
 	 */
+	//FileSystemXmlApplicationContxt 调用父类的构造方法,就是这个方法.
 	public AbstractApplicationContext(@Nullable ApplicationContext parent) {
 		this();
 		setParent(parent);
@@ -444,6 +447,10 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @see org.springframework.core.io.support.PathMatchingResourcePatternResolver
 	 */
 	protected ResourcePatternResolver getResourcePatternResolver() {
+
+		//AbstractApplicationContext 继承了 DefaultResourceLoader,因此它也是一个加载器
+
+		//Spring加载器,其中 getResource(String location) 方法用于载入资源
 		return new PathMatchingResourcePatternResolver(this);
 	}
 
@@ -504,13 +511,24 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 		return this.applicationListeners;
 	}
 
+
+//	refresh是一个模板方法
+//	refresh的作用是,在创建IOC容器之前,如果已经有容器存在,则需要先销毁或关闭.以保证refresh后是最新的容器.
+//	refresh的作用类似于IOC容器的重启
+//	在建立好的容器中,对容器进行初始化,对bean定义资源进行载入
 	@Override
 	public void refresh() throws BeansException, IllegalStateException {
+
+		//注意这有个同步快
 		synchronized (this.startupShutdownMonitor) {
 			// Prepare this context for refreshing.
+			//获取容器的当时时间.
 			prepareRefresh();
 
 			// Tell the subclass to refresh the internal bean factory.
+
+			//获得一个ConfigurableListableBeanFactory
+
 			ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
 
 			// Prepare the bean factory for use in this context.
@@ -609,6 +627,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @see #refreshBeanFactory()
 	 * @see #getBeanFactory()
 	 */
+	//告诉子类刷新 BeanFactory
 	protected ConfigurableListableBeanFactory obtainFreshBeanFactory() {
 		refreshBeanFactory();
 		ConfigurableListableBeanFactory beanFactory = getBeanFactory();
@@ -1287,6 +1306,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	// Implementation of ResourcePatternResolver interface
 	//---------------------------------------------------------------------
 
+
+	//用于载入资源
 	@Override
 	public Resource[] getResources(String locationPattern) throws IOException {
 		return this.resourcePatternResolver.getResources(locationPattern);

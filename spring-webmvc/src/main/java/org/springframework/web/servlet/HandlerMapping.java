@@ -53,6 +53,7 @@ import org.springframework.lang.Nullable;
  * @see org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping
  * @see org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping
  */
+//HandlerMapping,作用为通过request对象，获取对应的HandlerMethod对象。
 public interface HandlerMapping {
 
 	/**

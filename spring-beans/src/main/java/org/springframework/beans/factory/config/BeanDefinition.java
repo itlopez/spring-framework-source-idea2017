@@ -37,6 +37,20 @@ import org.springframework.lang.Nullable;
  * @see org.springframework.beans.factory.support.RootBeanDefinition
  * @see org.springframework.beans.factory.support.ChildBeanDefinition
  */
+//BeanDefinition 在 beans模块
+//
+//Spring中的bean对象使用 BeanDefinition来描述的
+//
+//BeanDefinition 继承了AttributeAccessor 可用于bean的属性访问
+//BeanDefinition 继承了 BeanMetadataElement 可用于bean的元数据访问
+
+//Spring bean 的解析过程非常复杂,功能被分的很细,所以bean的解析被扩展了很多的解析器
+//包括:BeanDefinitionReader,BeandefinitionDocumentReader,XmlBeanDefinitonReader...等
+
+//	注意:在解析配置文件定义的bean时,并没有创建bean,只是创建了bean对象的定义类,BeanDefinition
+//			将<Bean> 元素的信息设置到 BeanDefinition中 作为记录.
+//	当依赖注入时,才创建和实例化这些bean
+
 public interface BeanDefinition extends AttributeAccessor, BeanMetadataElement {
 
 	/**

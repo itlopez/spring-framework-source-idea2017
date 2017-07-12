@@ -353,6 +353,9 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 	 */
 	@Override
 	public final HandlerExecutionChain getHandler(HttpServletRequest request) throws Exception {
+
+		//其中Object handler = getHandlerInternal(request);
+		//为获取HandlerMethod对象,此方法源码如下:
 		Object handler = getHandlerInternal(request);
 		if (handler == null) {
 			handler = getDefaultHandler();
@@ -366,6 +369,10 @@ public abstract class AbstractHandlerMapping extends WebApplicationObjectSupport
 			handler = obtainApplicationContext().getBean(handlerName);
 		}
 
+
+		//在获得HandlerMethod对象之后，通过getHandlerExecutionChain(handler, request)将HandlerMethod对象与Interceptor拦截器封装,
+		//成为HandlerExecutionChain的对象。这就是doDispatch方法中mappedHandler引用指向的对象的来源流程。
+		//获得HandlerExecutionChain对象之后，可以通过这个对象获得之前封装进去的HandlerMethod对象。通过getHandler()即可。
 		HandlerExecutionChain executionChain = getHandlerExecutionChain(handler, request);
 		if (CorsUtils.isCorsRequest(request)) {
 			CorsConfiguration globalConfig = this.globalCorsConfigSource.getCorsConfiguration(request);

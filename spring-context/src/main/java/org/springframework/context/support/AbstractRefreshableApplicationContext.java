@@ -119,15 +119,25 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 	 */
 	@Override
 	protected final void refreshBeanFactory() throws BeansException {
+
+		//如果BeanFactory存在,先销毁,
 		if (hasBeanFactory()) {
+			//销毁,就是去clear各种map容器
 			destroyBeans();
+			//close就是 赋值=null
 			closeBeanFactory();
 		}
 		try {
+
 			DefaultListableBeanFactory beanFactory = createBeanFactory();
 			beanFactory.setSerializationId(getId());
+
+			//对ioc容器进行定制化,如设置启动参数,allowBeanDefinitionOverriding,allowCircularReferences
 			customizeBeanFactory(beanFactory);
+
+
 			loadBeanDefinitions(beanFactory);
+
 			synchronized (this.beanFactoryMonitor) {
 				this.beanFactory = beanFactory;
 			}
@@ -233,6 +243,8 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
 	 * @see org.springframework.beans.factory.support.PropertiesBeanDefinitionReader
 	 * @see org.springframework.beans.factory.xml.XmlBeanDefinitionReader
 	 */
+
+	//委派给了 AbstractXmlAppliactionContext 等实现类
 	protected abstract void loadBeanDefinitions(DefaultListableBeanFactory beanFactory)
 			throws BeansException, IOException;
 

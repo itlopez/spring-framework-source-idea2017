@@ -53,6 +53,12 @@ import org.springframework.lang.Nullable;
  * @see #getResourceByPath
  * @see GenericApplicationContext
  */
+
+//位于spring的context模块中
+
+
+
+
 public class FileSystemXmlApplicationContext extends AbstractXmlApplicationContext {
 
 	/**
@@ -117,6 +123,7 @@ public class FileSystemXmlApplicationContext extends AbstractXmlApplicationConte
 	 * @throws BeansException if context creation failed
 	 * @see #refresh()
 	 */
+	//
 	public FileSystemXmlApplicationContext(String[] configLocations, boolean refresh) throws BeansException {
 		this(configLocations, refresh, null);
 	}
@@ -132,13 +139,24 @@ public class FileSystemXmlApplicationContext extends AbstractXmlApplicationConte
 	 * @throws BeansException if context creation failed
 	 * @see #refresh()
 	 */
+
+	//实际调用
 	public FileSystemXmlApplicationContext(
 			String[] configLocations, boolean refresh, @Nullable ApplicationContext parent)
 			throws BeansException {
 
+		//首先,调用父(AbstractApplicationContext)的构造方法,为容器设置好bean资源加载器.
+		//最后用了 PathMatchingResourcePatternResolver 的getResources进行加载.
 		super(parent);
+
+
+		//然后,设置bean定义资源文件的路径  (父类AbstractRefreshableConfigApplicationContext 的方法)
+		//至此,Spring ioc容器在初始化时将配置的bean资源定位都封装到了Resource中
 		setConfigLocations(configLocations);
+
 		if (refresh) {
+
+			// refresh 定义载入bean的定义过程 (此方法是 AbstractApplicationContext的	)
 			refresh();
 		}
 	}

@@ -51,6 +51,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * @author Sam Brannen
  * @since 3.1
  */
+//HandlerMethod(org.springframework.web.method.HandlerMethod)，
+//这个类为中存放了某个bean对象和该bean对象的某个要处理的Method对象。
 public class HandlerMethod {
 
 	/** Logger that is available to subclasses */

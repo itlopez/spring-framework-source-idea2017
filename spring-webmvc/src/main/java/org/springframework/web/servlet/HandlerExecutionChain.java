@@ -36,6 +36,8 @@ import org.springframework.util.ObjectUtils;
  * @since 20.06.2003
  * @see HandlerInterceptor
  */
+//HandlerExecutionChain作用为通过加入Interceptor拦截器包装HandlerMapping返回的HandlerMethod对象。
+// 让待处理的方法对象与拦截器称为一个整体,即执行链。
 public class HandlerExecutionChain {
 
 	private static final Log logger = LogFactory.getLog(HandlerExecutionChain.class);

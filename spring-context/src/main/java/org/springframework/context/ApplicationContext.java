@@ -55,6 +55,16 @@ import org.springframework.lang.Nullable;
  * @see org.springframework.beans.factory.BeanFactory
  * @see org.springframework.core.io.ResourceLoader
  */
+
+
+//ApplicationContext 除了实现最基本的 BeanFactory 之外,增加了一些附加功能:
+//1. 继承了MessageSource ,可以支持信息源,可实现国际化.
+//2. 访问资源. (继承了ResourcePatternResolver)
+//3. 支付应用事件 ApplicationEventPublisher
+
+//	ApplicationContext 上下文体系, 当查找一个bean时,先从ApplicationContext中查找,其次是父上下文,逐级向上.
+//这样为不用的spring应用提供了一个共享的 bean定义环境.
+
 public interface ApplicationContext extends EnvironmentCapable, ListableBeanFactory, HierarchicalBeanFactory,
 		MessageSource, ApplicationEventPublisher, ResourcePatternResolver {
 

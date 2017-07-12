@@ -835,13 +835,22 @@ public abstract class FrameworkServlet extends HttpServletBean implements Applic
 
 	/**
 	 * Override the parent class implementation in order to intercept PATCH requests.
+	 *
+
 	 */
+
+	// 这里是入口,当我们发送请求时,DispatcherServlet会进行拦截,而对于Servlet来说。
+	// service方法是处理请求的核心,但DispatcherServlet中并没有定义此方法。我们通过父类FrameworkServlet中查看
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
 		HttpMethod httpMethod = HttpMethod.resolve(request.getMethod());
 		if (HttpMethod.PATCH == httpMethod || httpMethod == null) {
+
+			// processRequest(request,response)方法调用,在这个方法中，调用的了doService(request,response)。
+			// 而此时doService正是上述的DispatcherServlet中的doService方法。而doService中又调用了doDispatcher方法。
+			// 那么可以看出,doDispatcher就是DispatcherServlet处理核心方法。
 			processRequest(request, response);
 		}
 		else {
